@@ -1,0 +1,19 @@
+# docker-compose.yml – for local testing with PostgreSQL (cloud-like setup)
+# Usage: docker compose up -d
+# Then set DATABASE_URL=postgresql://neste:neste@localhost:5432/nestesteg in .env
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: neste
+      POSTGRES_PASSWORD: neste
+      POSTGRES_DB: nestesteg
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

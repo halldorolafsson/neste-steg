@@ -1,0 +1,155 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String         @id @default(cuid())
+  email          String         @unique
+  name           String?
+  hashedPassword String
+  isAdmin        Boolean        @default(false)
+  sessionVersion Int            @default(0)
+  passwordResets PasswordReset[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  tasks          Task[]
+  assets         Asset[]
+  focusSessions  FocusSession[]
+  weeklyReviews  WeeklyReview[]
+}
+
+model UserInvitation {
+  id        String   @id @default(cuid())
+  email     String
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Area {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  tasks     Task[]
+  assets    Asset[]
+}
+
+model Asset {
+  id        String   @id @default(cuid())
+  name      String
+  areaId    String
+  area      Area     @relation(fields: [areaId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tasks     Task[]
+}
+
+model Task {
+  id               String         @id @default(cuid())
+  title            String
+  description      String?
+  areaId           String
+  area             Area           @relation(fields: [areaId], references: [id])
+  assetId          String?
+  asset            Asset?         @relation(fields: [assetId], references: [id])
+  userId           String
+  user             User           @relation(fields: [userId], references: [id])
+  estimatedMinutes Int?
+  energyLevel      EnergyLevel    @default(MEDIUM)
+  locationType     String         @default("ANYWHERE")
+  priority         Priority       @default(MEDIUM)
+  status           TaskStatus     @default(INBOX)
+  dueDate          DateTime?
+  recurrenceRule   String?
+  snoozedUntil     DateTime?
+  snoozeCount      Int            @default(0)
+  completedAt      DateTime?
+  archivedAt       DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  focusSessions    FocusSession[]
+}
+
+model FocusSession {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  taskId        String?
+  task          Task?     @relation(fields: [taskId], references: [id])
+  durationMin   Int
+  startedAt     DateTime  @default(now())
+  completedAt   DateTime?
+  distractions  Int       @default(0)
+  notes         String?
+}
+
+model WeeklyReview {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  weekStart       DateTime
+  completedTasks  Int      @default(0)
+  focusMinutes    Int      @default(0)
+  neglectedAreas  String   @default("[]")
+  suggestedFocus  String   @default("[]")
+  notes           String?
+  createdAt       DateTime @default(now())
+}
+
+model Location {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NavigationSetting {
+  key       String   @id
+  isVisible Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+enum EnergyLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TaskStatus {
+  INBOX
+  TODO
+  IN_PROGRESS
+  DONE
+  ARCHIVED
+}

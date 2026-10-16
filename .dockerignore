@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.gitignore
+*.md
+.env*
+.vscode
+coverage
+prisma/dev.db
+prisma/dev.db-*
+backup/
+Importfil.json
+src/__tests__
+vitest.config.*
