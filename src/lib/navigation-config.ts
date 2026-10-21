@@ -2,6 +2,7 @@ export const navigationItems = [
   { href: "/", key: "dashboard", defaultVisible: true, mobile: true },
   { href: "/inbox", key: "inbox", defaultVisible: false, mobile: true },
   { href: "/tasks", key: "tasks", defaultVisible: true, mobile: true },
+  { href: "/notes", key: "notes", defaultVisible: true, mobile: true },
   { href: "/areas", key: "areas", defaultVisible: true, mobile: false },
   { href: "/assets", key: "assets", defaultVisible: true, mobile: false },
   { href: "/focus", key: "focus", defaultVisible: true, mobile: true },

@@ -48,6 +48,11 @@ export const mockDb = {
     create: vi.fn(),
     updateMany: vi.fn(),
   },
+  note: {
+    create: vi.fn(), update: vi.fn(), delete: vi.fn(), findUnique: vi.fn(), findMany: vi.fn(),
+  },
+  taskNote: { upsert: vi.fn(), deleteMany: vi.fn() },
+  taskFormPreference: { findUnique: vi.fn(), upsert: vi.fn() },
   $transaction: vi.fn(),
 };
 

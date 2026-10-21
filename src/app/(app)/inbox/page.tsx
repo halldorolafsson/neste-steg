@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { InboxForm } from "@/components/inbox-form";
 import { TaskItem } from "@/components/task-item";
 import { PageTitle, TranslatedText } from "@/components/translated";
+import Link from "next/link";
 
 export default async function InboxPage() {
   const session = await requireAuth();
@@ -18,7 +19,12 @@ export default async function InboxPage() {
 
   return (
     <div className="space-y-6">
-      <PageTitle page="inbox.title" />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <PageTitle page="inbox.title" />
+        <Link href="/tasks/new" className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+          <TranslatedText path="tasks.new" />
+        </Link>
+      </div>
 
       <div className="rounded-lg border bg-card p-4 shadow-sm">
         <InboxForm />

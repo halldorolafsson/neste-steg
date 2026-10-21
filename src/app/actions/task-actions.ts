@@ -81,17 +81,17 @@ export async function updateTask(formData: FormData) {
 
   for (const field of fields) {
     const value = formData.get(field);
-    if (value !== null && value !== "") {
+    if (value !== null && (value !== "" || field === "description" || field === "assetId")) {
       updates[field] = value as string;
     }
   }
 
-  if (formData.get("estimatedMinutes")) {
-    updates.estimatedMinutes = Number(formData.get("estimatedMinutes"));
+  if (formData.has("estimatedMinutes")) {
+    updates.estimatedMinutes = formData.get("estimatedMinutes") ? Number(formData.get("estimatedMinutes")) : null;
   }
 
-  if (formData.get("dueDate")) {
-    updates.dueDate = new Date(formData.get("dueDate") as string);
+  if (formData.has("dueDate")) {
+    updates.dueDate = formData.get("dueDate") ? new Date(formData.get("dueDate") as string) : null;
   }
 
   if (formData.get("clearDueDate")) {

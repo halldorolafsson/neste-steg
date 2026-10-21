@@ -20,6 +20,8 @@ model User {
   assets         Asset[]
   focusSessions  FocusSession[]
   weeklyReviews  WeeklyReview[]
+  notes          Note[]
+  taskFormPreference TaskFormPreference?
 }
 
 model UserInvitation {
@@ -31,6 +33,35 @@ model UserInvitation {
   createdAt DateTime @default(now())
 
   @@index([email])
+}
+
+model TaskFormPreference {
+  userId        String @id
+  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  visibleFields String
+}
+
+model Note {
+  id        String @id @default(cuid())
+  userId    String
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  content   String @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  taskLinks TaskNote[]
+
+  @@index([userId, updatedAt])
+}
+
+model TaskNote {
+  taskId String
+  noteId String
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  note   Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, noteId])
+  @@index([noteId])
 }
 
 model PasswordReset {
@@ -91,6 +122,7 @@ model Task {
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   focusSessions    FocusSession[]
+  noteLinks        TaskNote[]
 }
 
 model FocusSession {

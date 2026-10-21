@@ -1,4 +1,28 @@
 {
+  "notes": {
+    "title": "Notater", "new": "Nytt notat", "edit": "Notat", "noteTitle": "Tittel", "content": "Innhold",
+    "search": "Søk i notater", "searchTasks": "Søk i oppgaver", "empty": "Ingen notater funnet",
+    "tasks": "Tilknyttede oppgaver", "linkTasks": "Koble til oppgaver", "linkNote": "Koble til notat",
+    "chooseNote": "Velg notat", "link": "Koble til", "unlink": "Fjern kobling", "none": "Ingen tilknyttede notater",
+    "deleteConfirm": "Slette notatet? Tilknyttede oppgaver beholdes.", "saved": "Lagret",
+    "saving": "Lagrer...", "error": "Kunne ikke lagre endringen. Kontroller valgene og prøv igjen.", "noTasks": "Ingen oppgaver funnet"
+  },
+  "taskFields": {
+    "title": "Synlige oppgavefelt", "more": "Flere felt", "less": "Færre felt", "saved": "Lagret",
+    "error": "Kunne ikke lagre feltvalgene. Prøv igjen.", "saving": "Lagrer..."
+  },
+  "notes": {
+    "title": "Notater", "new": "Nytt notat", "edit": "Notat", "noteTitle": "Tittel", "content": "Innhold",
+    "search": "Søk i notater", "searchTasks": "Søk i oppgaver", "empty": "Ingen notater funnet",
+    "tasks": "Tilknyttede oppgaver", "linkTasks": "Koble til oppgaver", "linkNote": "Koble til notat",
+    "chooseNote": "Velg notat", "link": "Koble til", "unlink": "Fjern kobling", "none": "Ingen tilknyttede notater",
+    "deleteConfirm": "Slette notatet? Tilknyttede oppgaver beholdes.", "saved": "Lagret",
+    "saving": "Lagrer...", "error": "Kunne ikke lagre endringen. Kontroller valgene og prøv igjen.", "noTasks": "Ingen oppgaver funnet"
+  },
+  "taskFields": {
+    "title": "Synlige oppgavefelt", "more": "Flere felt", "less": "Færre felt", "saved": "Lagret",
+    "error": "Kunne ikke lagre feltvalgene. Prøv igjen.", "saving": "Lagrer..."
+  },
   "passwords": {
     "changeTitle": "Bytt passord", "resetTitle": "Velg nytt passord", "forgotTitle": "Glemt passord?",
     "currentPassword": "Nåværende passord", "newPassword": "Nytt passord", "confirmation": "Gjenta nytt passord",
@@ -14,6 +38,8 @@
     "dashboard": "Dashboard",
     "inbox": "Innboks",
     "tasks": "Oppgaver",
+    "notes": "Notater",
+    "notes": "Notater",
     "areas": "Områder",
     "assets": "Eiendeler",
     "focus": "Fokus",
@@ -113,6 +139,10 @@
     "location": "Sted",
     "dueDate": "Frist",
     "status": "Status",
+    "sort": "Sorter",
+    "newest": "Nyeste først",
+    "oldest": "Eldste først",
+    "resetFilters": "Nullstill filter",
     "allStatuses": "Alle statuser",
     "allAreas": "Alle områder",
     "allPriorities": "Alle prioriteter",

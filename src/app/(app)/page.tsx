@@ -66,8 +66,12 @@ export default async function DashboardPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <PageTitle page="dashboard.title" />
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/tasks/new" className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+            <TranslatedText path="tasks.new" />
+          </Link>
         {inboxCount > 0 && (
           <Link
             href="/inbox"
@@ -76,6 +80,7 @@ export default async function DashboardPage({ searchParams }: Props) {
             {inboxCount} <TranslatedText path="dashboard.inInbox" />
           </Link>
         )}
+        </div>
       </div>
 
       <ContextSelector
@@ -107,9 +112,6 @@ export default async function DashboardPage({ searchParams }: Props) {
         {top3.length === 0 ? (
           <div className="rounded-lg border bg-card p-4 text-center">
             <TranslatedText path="dashboard.noTasks" className="text-sm text-muted-foreground" as="p" />
-            <Link href="/tasks/new" className="text-sm text-primary hover:underline mt-1 inline-block">
-              <TranslatedText path="dashboard.createTask" />
-            </Link>
           </div>
         ) : (
           <div className="space-y-2">

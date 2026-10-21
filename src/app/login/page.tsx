@@ -5,6 +5,7 @@ import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/i18n-provider";
+import { clearTaskFilters } from "@/lib/task-filters";
 
 const subscribeToLocation = () => () => {};
 const getPasswordChanged = () => new URLSearchParams(window.location.search).get("passwordChanged") === "1";
@@ -33,6 +34,7 @@ export default function LoginPage() {
       setError(t.login.error);
       setLoading(false);
     } else {
+      clearTaskFilters();
       router.push("/");
       router.refresh();
     }

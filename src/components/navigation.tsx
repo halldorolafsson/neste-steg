@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useI18n } from "@/components/i18n-provider";
 import { cn } from "@/lib/utils";
+import { clearTaskFilters } from "@/lib/task-filters";
 import {
   navigationItems,
   type NavigationKey,
@@ -23,7 +24,7 @@ export function BottomNav({ visibleKeys }: NavigationProps) {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-white md:hidden">
-      <div className="flex items-center justify-around py-2">
+      <div className="flex items-center justify-around overflow-x-auto py-2">
         {mobileItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -31,7 +32,7 @@ export function BottomNav({ visibleKeys }: NavigationProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "px-2 py-2 text-xs",
+                "shrink-0 px-2 py-2 text-xs",
                 isActive
                   ? "text-blue-600 font-medium"
                   : "text-gray-500 hover:text-gray-900"
@@ -78,7 +79,7 @@ export function Sidebar({ visibleKeys }: NavigationProps) {
       </nav>
       <div className="px-2 py-4 border-t">
         <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
+          onClick={() => { clearTaskFilters(); void signOut({ callbackUrl: "/login" }); }}
           className="w-full rounded-md px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
         >
           {t.nav.logout}

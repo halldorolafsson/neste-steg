@@ -8,6 +8,7 @@ import {
 } from "@/components/realtime-task-agent";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { defaultTaskFields, type OptionalTaskField } from "@/lib/task-form-fields";
 
 interface Area {
   id: string;
@@ -25,6 +26,7 @@ interface Location {
 }
 
 interface TaskFormProps {
+  visibleFields?: OptionalTaskField[];
   areas: Area[];
   assets?: Asset[];
   locations: Location[];
@@ -43,10 +45,12 @@ interface TaskFormProps {
   };
 }
 
-export function TaskForm({ areas, assets = [], locations, task }: TaskFormProps) {
+export function TaskForm({ areas, assets = [], locations, task, visibleFields = defaultTaskFields }: TaskFormProps) {
   const router = useRouter();
   const { t } = useI18n();
   const isEdit = !!task;
+  const [showAll, setShowAll] = useState(false);
+  const visible = (field: OptionalTaskField) => showAll || visibleFields.includes(field);
   const [title, setTitle] = useState(task?.title || "");
   const [description, setDescription] = useState(task?.description || "");
   const [dueDate, setDueDate] = useState(
@@ -139,7 +143,7 @@ export function TaskForm({ areas, assets = [], locations, task }: TaskFormProps)
       </div>
 
       {/* Beskrivelse */}
-      <div>
+      <div hidden={!visible("description")}>
         <label htmlFor="description" className="block text-sm font-medium text-foreground">
           {t.tasks.description}
         </label>
@@ -154,7 +158,7 @@ export function TaskForm({ areas, assets = [], locations, task }: TaskFormProps)
       </div>
 
       {/* Område + Status (på én rad) */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className={`grid gap-3 ${isEdit ? "sm:grid-cols-2" : "grid-cols-1"}`}>
         <div>
           <label htmlFor="areaId" className="block text-sm font-medium text-foreground">
             {t.tasks.area} *
@@ -197,7 +201,7 @@ export function TaskForm({ areas, assets = [], locations, task }: TaskFormProps)
 
       {/* Eiendel */}
       {assets.length > 0 && (
-        <div>
+        <div hidden={!visible("assetId")}>
           <label htmlFor="assetId" className="block text-sm font-medium text-foreground">
             {t.tasks.asset}
           </label>
@@ -216,8 +220,8 @@ export function TaskForm({ areas, assets = [], locations, task }: TaskFormProps)
       )}
 
       {/* Prioritet + Energi + Tid */}
-      <div className="grid grid-cols-3 gap-3">
-        <div>
+      <div className={`${visible("priority") || visible("energyLevel") || visible("estimatedMinutes") ? "grid" : "hidden"} grid-cols-[repeat(auto-fit,minmax(min(100%,12rem),1fr))] gap-3`}>
+        <div hidden={!visible("priority")}>
           <label htmlFor="priority" className="block text-sm font-medium text-foreground">
             {t.tasks.priority}
           </label>
@@ -234,7 +238,7 @@ export function TaskForm({ areas, assets = [], locations, task }: TaskFormProps)
           </select>
         </div>
 
-        <div>
+        <div hidden={!visible("energyLevel")}>
           <label htmlFor="energyLevel" className="block text-sm font-medium text-foreground">
             {t.tasks.energy}
           </label>
@@ -251,7 +255,7 @@ export function TaskForm({ areas, assets = [], locations, task }: TaskFormProps)
           </select>
         </div>
 
-        <div>
+        <div hidden={!visible("estimatedMinutes")}>
           <label htmlFor="estimatedMinutes" className="block text-sm font-medium text-foreground">
             {t.tasks.estimatedTime}
           </label>
@@ -268,8 +272,8 @@ export function TaskForm({ areas, assets = [], locations, task }: TaskFormProps)
       </div>
 
       {/* Sted + Frist */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
+      <div className={`${visible("locationType") || visible("dueDate") ? "grid" : "hidden"} grid-cols-[repeat(auto-fit,minmax(min(100%,12rem),1fr))] gap-3`}>
+        <div hidden={!visible("locationType")}>
           <label htmlFor="locationType" className="block text-sm font-medium text-foreground">
             {t.tasks.location}
           </label>
@@ -286,7 +290,7 @@ export function TaskForm({ areas, assets = [], locations, task }: TaskFormProps)
           </select>
         </div>
 
-        <div>
+        <div hidden={!visible("dueDate")}>
           <label htmlFor="dueDate" className="block text-sm font-medium text-foreground">
             {t.tasks.dueDate}
           </label>
@@ -302,6 +306,9 @@ export function TaskForm({ areas, assets = [], locations, task }: TaskFormProps)
       </div>
 
       {/* Knapper */}
+      <button type="button" onClick={() => setShowAll(!showAll)} aria-expanded={showAll} className="text-sm underline">
+        {showAll ? t.taskFields.less : t.taskFields.more}
+      </button>
       <div className="flex gap-3 pt-2">
         <button
           type="submit"

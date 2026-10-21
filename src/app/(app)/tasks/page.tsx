@@ -4,40 +4,28 @@ import { TaskItem } from "@/components/task-item";
 import { TaskFilters } from "@/components/task-filters";
 import { PageTitle, TranslatedText } from "@/components/translated";
 import Link from "next/link";
-import { Prisma } from "@prisma/client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { TASK_FILTER_COOKIE, savedTaskQuery, taskParams, taskWhere, taskOrder, type TaskSearchParams } from "@/lib/task-filters";
 
 interface Props {
-  searchParams: Promise<{ status?: string; area?: string; priority?: string }>;
+  searchParams: Promise<TaskSearchParams>;
 }
 
 export default async function TasksPage({ searchParams }: Props) {
   const session = await requireAuth();
-  const params = await searchParams;
-
-  const where: Prisma.TaskWhereInput = {
-    userId: session.user.id,
-    status: { not: "ARCHIVED" },
-  };
-
-  if (params.status) {
-    where.status = params.status as Prisma.EnumTaskStatusFilter;
-  } else {
-    where.status = { notIn: ["ARCHIVED", "INBOX"] };
+  const params = taskParams(await searchParams);
+  if (params.size === 0) {
+    const saved = savedTaskQuery((await cookies()).get(TASK_FILTER_COOKIE)?.value, session.user.id);
+    if (saved) redirect(`/tasks?${saved}`);
   }
-
-  if (params.priority) {
-    where.priority = params.priority as Prisma.EnumPriorityFilter;
-  }
-
-  if (params.area) {
-    where.area = { slug: params.area };
-  }
+  const where = taskWhere(session.user.id, params);
 
   const [tasks, areas, counts] = await Promise.all([
     db.task.findMany({
       where,
       include: { area: true },
-      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
+      orderBy: taskOrder(params),
     }),
     db.area.findMany({ orderBy: { sortOrder: "asc" } }),
     db.task.groupBy({
@@ -66,7 +54,7 @@ export default async function TasksPage({ searchParams }: Props) {
         </Link>
       </div>
 
-      <TaskFilters areas={areas} />
+      <TaskFilters areas={areas} userId={session.user.id} />
 
       <div className="space-y-2">
         {tasks.length === 0 ? (

@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { TaskForm } from "@/components/task-form";
 import { TaskActions } from "@/components/task-actions";
 import { PageTitle } from "@/components/translated";
+import { resolveTaskFields } from "@/lib/task-form-fields";
+import { TaskNotes } from "@/components/task-notes";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -27,6 +29,12 @@ export default async function TaskDetailPage({ params }: Props) {
   ]);
 
   if (!task) notFound();
+  const preference = await db.taskFormPreference.findUnique({ where: { userId: session.user.id } });
+  const notes = await db.note.findMany({
+    where: { userId: session.user.id },
+    select: { id: true, title: true, taskLinks: { where: { taskId: id }, select: { taskId: true } } },
+    orderBy: { title: "asc" },
+  });
 
   return (
     <div className="space-y-6">
@@ -41,8 +49,10 @@ export default async function TaskDetailPage({ params }: Props) {
           assets={assets}
           locations={locations}
           task={task}
+          visibleFields={resolveTaskFields(preference?.visibleFields)}
         />
       </div>
+      <TaskNotes taskId={id} notes={notes.map((note) => ({ id: note.id, title: note.title, linked: note.taskLinks.length > 0 }))} />
     </div>
   );
 }

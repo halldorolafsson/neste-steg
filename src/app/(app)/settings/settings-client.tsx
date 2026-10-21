@@ -12,6 +12,8 @@ import {
 import Link from "next/link";
 import { UserInvitations, type UserInvitationsProps } from "@/components/user-invitations";
 import { PasswordForm } from "@/components/password-form";
+import { TaskFieldSettings } from "@/components/task-field-settings";
+import type { OptionalTaskField } from "@/lib/task-form-fields";
 
 interface Area {
   id: string;
@@ -30,6 +32,7 @@ interface Location {
 }
 
 interface SettingsClientProps {
+  visibleTaskFields: OptionalTaskField[];
   areas: Area[];
   locations: Location[];
   navigationSettings: { key: string; isVisible: boolean }[];
@@ -39,6 +42,7 @@ interface SettingsClientProps {
 }
 
 export function SettingsClient({
+  visibleTaskFields,
   areas,
   locations,
   navigationSettings,
@@ -52,6 +56,7 @@ export function SettingsClient({
   return (
     <div className="space-y-8">
       <h1 className="text-2xl font-bold text-foreground">{t.settings.title}</h1>
+      <TaskFieldSettings visibleFields={visibleTaskFields} />
       <section className="space-y-4 border-t pt-4">
         <h2 className="text-sm font-medium">{t.passwords.changeTitle}</h2>
         <PasswordForm />

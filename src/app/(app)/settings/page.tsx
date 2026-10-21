@@ -1,9 +1,11 @@
 import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { SettingsClient } from "./settings-client";
+import { resolveTaskFields } from "@/lib/task-form-fields";
 
 export default async function SettingsPage() {
   const session = await requireAuth();
+  const preference = await db.taskFormPreference.findUnique({ where: { userId: session.user.id } });
 
   const [areas, locations, locationCounts, navigationSettings, user] =
     await Promise.all([
@@ -41,6 +43,7 @@ export default async function SettingsPage() {
 
   return (
     <SettingsClient
+      visibleTaskFields={resolveTaskFields(preference?.visibleFields)}
       areas={areas}
       locations={locations.map((location) => ({
         ...location,

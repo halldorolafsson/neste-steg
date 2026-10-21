@@ -1,4 +1,28 @@
 {
+  "notes": {
+    "title": "Notes", "new": "New note", "edit": "Note", "noteTitle": "Title", "content": "Content",
+    "search": "Search notes", "searchTasks": "Search tasks", "empty": "No notes found",
+    "tasks": "Linked tasks", "linkTasks": "Link tasks", "linkNote": "Link a note",
+    "chooseNote": "Choose note", "link": "Link", "unlink": "Unlink", "none": "No linked notes",
+    "deleteConfirm": "Delete this note? Linked tasks will be kept.", "saved": "Saved",
+    "saving": "Saving...", "error": "Could not save the change. Check your selections and try again.", "noTasks": "No tasks found"
+  },
+  "taskFields": {
+    "title": "Visible task fields", "more": "More fields", "less": "Fewer fields", "saved": "Saved",
+    "error": "Could not save field preferences. Try again.", "saving": "Saving..."
+  },
+  "notes": {
+    "title": "Notes", "new": "New note", "edit": "Note", "noteTitle": "Title", "content": "Content",
+    "search": "Search notes", "searchTasks": "Search tasks", "empty": "No notes found",
+    "tasks": "Linked tasks", "linkTasks": "Link tasks", "linkNote": "Link a note",
+    "chooseNote": "Choose note", "link": "Link", "unlink": "Unlink", "none": "No linked notes",
+    "deleteConfirm": "Delete this note? Linked tasks will be kept.", "saved": "Saved",
+    "saving": "Saving...", "error": "Could not save the change. Check your selections and try again.", "noTasks": "No tasks found"
+  },
+  "taskFields": {
+    "title": "Visible task fields", "more": "More fields", "less": "Fewer fields", "saved": "Saved",
+    "error": "Could not save field preferences. Try again.", "saving": "Saving..."
+  },
   "passwords": {
     "changeTitle": "Change password", "resetTitle": "Choose a new password", "forgotTitle": "Forgot password?",
     "currentPassword": "Current password", "newPassword": "New password", "confirmation": "Confirm new password",
@@ -14,6 +38,8 @@
     "dashboard": "Dashboard",
     "inbox": "Inbox",
     "tasks": "Tasks",
+    "notes": "Notes",
+    "notes": "Notes",
     "areas": "Areas",
     "assets": "Assets",
     "focus": "Focus",
@@ -113,6 +139,10 @@
     "location": "Location",
     "dueDate": "Due date",
     "status": "Status",
+    "sort": "Sort",
+    "newest": "Newest first",
+    "oldest": "Oldest first",
+    "resetFilters": "Reset filters",
     "allStatuses": "All statuses",
     "allAreas": "All areas",
     "allPriorities": "All priorities",
