@@ -8,6 +8,10 @@ Agenten kan fylle ut et oppgaveutkast gjennom verktøyet `prepare_task_draft`.
 Verktøyet lagrer ikke data. Brukeren må kontrollere skjemaet og trykke
 **Opprett** før oppgaven lagres.
 
+På **Nytt notat** kan agenten fylle ut tittel, innhold og koblede oppgaver
+gjennom verktøyet `prepare_note_draft`. Også her må brukeren trykke **Lagre**
+før notatet lagres.
+
 ## Miljøvariabler
 
 ```dotenv
@@ -28,6 +32,9 @@ ved produksjonsdrift. Den skal aldri ha prefikset `NEXT_PUBLIC_`.
 3. Trykk **Start samtale** og tillat mikrofontilgang.
 4. Beskriv oppgaven og svar på eventuelle oppfølgingsspørsmål.
 5. Kontroller utkastet og trykk **Opprett**.
+
+For notater åpner du **Nytt notat** i stedet for **Ny oppgave** og trykker
+**Lagre** til slutt.
 
 ## Mobiltelefon
 

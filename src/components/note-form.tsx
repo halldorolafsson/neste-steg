@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { startTransition, useState } from "react";
 import { saveNote, deleteNote } from "@/app/actions/note-actions";
 import { useI18n } from "@/components/i18n-provider";
+import { RealtimeNoteAgent, type RealtimeNoteDraft } from "@/components/realtime-note-agent";
 
 interface NoteFormProps {
   note?: { id: string; title: string; content: string };
@@ -23,6 +24,12 @@ export function NoteForm({ note, tasks, selectedTaskIds = [] }: NoteFormProps) {
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const inputClass = "mt-1 block w-full rounded-md border bg-background px-3 py-2 text-sm";
 
+  function handleAgentDraft(draft: RealtimeNoteDraft) {
+    setTitle(draft.title);
+    setContent(draft.content);
+    setSelected((current) => [...new Set([...current, ...draft.taskIds])]);
+  }
+
   return (
     <form onSubmit={(event) => {
       event.preventDefault();
@@ -40,6 +47,7 @@ export function NoteForm({ note, tasks, selectedTaskIds = [] }: NoteFormProps) {
     }} onChange={() => { if (state !== "saving") setState("idle"); }} className="space-y-4">
       {id && <input type="hidden" name="id" value={id} />}
       {selected.map((taskId) => <input key={taskId} type="hidden" name="taskIds" value={taskId} />)}
+      {!id && <RealtimeNoteAgent tasks={tasks} onDraft={handleAgentDraft} />}
       <fieldset disabled={state === "saving"} className="min-w-0 space-y-4">
         <div>
           <label htmlFor="note-title" className="text-sm font-medium">{t.notes.noteTitle}</label>

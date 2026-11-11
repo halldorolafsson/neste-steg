@@ -1,17 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NoteForm } from "@/components/note-form";
 import { TaskForm } from "@/components/task-form";
 import { TaskFieldSettings } from "@/components/task-field-settings";
 import { I18nProvider } from "@/components/i18n-provider";
+import type { RealtimeNoteDraft } from "@/components/realtime-note-agent";
 import type { ReactElement } from "react";
 
-const mocks = vi.hoisted(() => ({ save: vi.fn(), remove: vi.fn(), createTask: vi.fn(), updateTask: vi.fn(), preference: vi.fn(), push: vi.fn(), replace: vi.fn(), refresh: vi.fn() }));
+const mocks = vi.hoisted(() => ({ save: vi.fn(), remove: vi.fn(), createTask: vi.fn(), updateTask: vi.fn(), preference: vi.fn(), push: vi.fn(), replace: vi.fn(), refresh: vi.fn(), noteAgent: vi.fn() }));
 vi.mock("@/app/actions/note-actions", () => ({ saveNote: mocks.save, deleteNote: mocks.remove }));
 vi.mock("@/app/actions/task-actions", () => ({ createTask: mocks.createTask, updateTask: mocks.updateTask }));
 vi.mock("@/app/actions/task-form-actions", () => ({ saveTaskFormPreference: mocks.preference }));
 vi.mock("@/components/realtime-task-agent", () => ({ RealtimeTaskAgent: () => null }));
+vi.mock("@/components/realtime-note-agent", () => ({ RealtimeNoteAgent: (props: unknown) => { mocks.noteAgent(props); return null; } }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: mocks.push, replace: mocks.replace, refresh: mocks.refresh, back: vi.fn() }) }));
 
 const tasks = [{ id: "t1", title: "Boat engine" }, { id: "t2", title: "Hull" }];
@@ -48,6 +50,17 @@ describe("simple notes", () => {
     await waitFor(() => expect(mocks.save).toHaveBeenCalled());
     expect((mocks.save.mock.calls[0][0] as FormData).getAll("taskIds")).toEqual(["t1", "t2"]);
     expect(screen.getByRole("link", { name: "Boat engine" })).toHaveAttribute("href", "/tasks/t1");
+  });
+
+  it("fills the form from a voice agent draft and saves the linked tasks", async () => {
+    wrap(<NoteForm tasks={tasks} selectedTaskIds={["t1"]} />);
+    const props = mocks.noteAgent.mock.calls.at(-1)?.[0] as { onDraft: (draft: RealtimeNoteDraft) => void };
+    act(() => props.onDraft({ title: "Boat trip", content: "Check the hull", taskIds: ["t2"] }));
+    expect(screen.getByLabelText("Title")).toHaveValue("Boat trip");
+    expect(screen.getByLabelText("Content")).toHaveValue("Check the hull");
+    await userEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() => expect(mocks.save).toHaveBeenCalled());
+    expect((mocks.save.mock.calls[0][0] as FormData).getAll("taskIds")).toEqual(["t1", "t2"]);
   });
 
   it("keeps unsaved note text when saving fails", async () => {
